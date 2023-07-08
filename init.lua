@@ -97,6 +97,7 @@ travelnet.path = minetest.get_modpath(minetest.get_current_modname())
 local S = minetest.get_translator("travelnet")
 travelnet.S = S
 
+local s = minetest.get_mod_storage()
 
 minetest.register_privilege("travelnet_attach", { description = S("allows to attach travelnet boxes to travelnets of other players"), give_to_singleplayer = false});
 minetest.register_privilege("travelnet_remove", { description = S("allows to dig travelnet boxes which belog to nets of other players"), give_to_singleplayer = false});
@@ -109,7 +110,10 @@ travelnet.mod_data_path = minetest.get_worldpath().."/mod_travelnet.data"
 -- TODO: save and restore ought to be library functions and not implemented in each individual mod!
 -- called whenever a station is added or removed
 travelnet.save_data = function()
-
+   for pname, data in pairs(travelnet.targets) do
+      s:set_string(pname,minetest.serialize(data))
+   end
+   --[[
    local data = minetest.serialize( travelnet.targets );
 
    local success = minetest.safe_file_write( travelnet.mod_data_path, data );
@@ -117,30 +121,38 @@ travelnet.save_data = function()
       print(S("[Mod travelnet] Error: Savefile '%s' could not be written.")
          :format(travelnet.mod_data_path));
    end
+   ]]
 end
 
 
 travelnet.restore_data = function()
-   
-   local file = io.open( travelnet.mod_data_path, "r" );
-   if( not file ) then
-      print(S("[Mod travelnet] Error: Savefile '%s' not found.")
-         :format(travelnet.mod_data_path));
-      return;
+   local stable = s:to_table().fields
+   local count = 0
+   for pname, data in pairs(stable) do
+      travelnet.targets[pname] = minetest.deserialize(data)
+      count = count + 1
    end
+   if count == 0 then
+      local file = io.open( travelnet.mod_data_path, "r" );
+      if( not file ) then
+         print(S("[Mod travelnet] Error: Savefile '%s' not found.")
+            :format(travelnet.mod_data_path));
+         return;
+      end
 
-   local data = file:read("*all");
-   travelnet.targets = minetest.deserialize( data );
+      local data = file:read("*all");
+      travelnet.targets = minetest.deserialize( data );
 
-   if( not travelnet.targets ) then
-       local backup_file = travelnet.mod_data_path..".bak"
-       print(S("[Mod travelnet] Error: Savefile '%s' is damaged. Saved the backup as '%s'.")
-          :format(travelnet.mod_data_path, backup_file));
+      if( not travelnet.targets ) then
+         local backup_file = travelnet.mod_data_path..".bak"
+         print(S("[Mod travelnet] Error: Savefile '%s' is damaged. Saved the backup as '%s'.")
+            :format(travelnet.mod_data_path, backup_file));
 
-       minetest.safe_file_write( backup_file, data );
-       travelnet.targets = {};
+         minetest.safe_file_write( backup_file, data );
+         travelnet.targets = {};
+      end
+      file:close();
    end
-   file:close();
 end
 
 
@@ -692,7 +704,7 @@ travelnet.on_receive_fields = function(pos, formname, fields, player)
    local owner = meta:get_string("owner");
    local name = player:get_player_name();
    local node = minetest.get_node(pos);
-   if name == owner then
+   if name == owner or minetest.check_player_privs(name,{protection_bypass=true}) then
       if fields.white then
          local rot = get_rot(node)
          node.param2 = 0 + rot
