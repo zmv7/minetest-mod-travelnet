@@ -336,7 +336,7 @@ travelnet.update_formspec = function( pos, puncher_name, fields )
       trheight = "11.5";
    end
    local formspec = "size[12,"..trheight.."]"..
-                            "label[3.3,0.0;"..S("Travelnet-Box")..":]".."label[6.3,0.0;"..S("Punch box to update target list.").."]"..
+                            "label[6.3,0.0;"..S("Punch box to update target list.").."]"..
                             "label[0.3,0.4;"..S("Name of this station:").."]".."label[6.3,0.4;"..minetest.formspec_escape(station_name or "?").."]"..
                             "label[0.3,0.8;"..S("Assigned to Network:").."]" .."label[6.3,0.8;"..minetest.formspec_escape(station_network or "?").."]"..
                             "label[0.3,1.2;"..S("Owned by:").."]"            .."label[6.3,1.2;"..minetest.formspec_escape(owner_name or "?").."]"..
@@ -479,6 +479,14 @@ travelnet.update_formspec = function( pos, puncher_name, fields )
       end
    end
    formspec = formspec..
+         (is_elevator and "" or "image_button[-0.2,-0.2;0.8,0.8;default_cloud.png;white;]" ..
+         "image_button[0.4,-0.2;0.8,0.8;default_cloud.png^\\[colorize:#ff0000;red;]" ..
+         "image_button[1,-0.2;0.8,0.8;default_cloud.png^\\[colorize:#ff9800;orange;]" ..
+         "image_button[1.6,-0.2;0.8,0.8;default_cloud.png^\\[colorize:#ffff00;yellow;]" ..
+         "image_button[2.2,-0.2;0.8,0.8;default_cloud.png^\\[colorize:#00ff00;green;]" ..
+         "image_button[2.8,-0.2;0.8,0.8;default_cloud.png^\\[colorize:#00ffff;cyan;]" ..
+         "image_button[3.4,-0.2;0.8,0.8;default_cloud.png^\\[colorize:#0000ff;blue;]" ..
+         "image_button[4,-0.2;0.8,0.8;default_cloud.png^\\[colorize:#aa00ff;violet;]") ..
          "label[8.0,1.6;"..S("Position in list:").."]"..
          "button_exit[11.3,0.0;1.0,0.5;station_exit;"..S("Exit").."]"..
          "button_exit[10.0,0.5;2.2,0.7;station_dig;"..S("Remove station").."]"..
@@ -656,15 +664,79 @@ travelnet.open_close_door = function( pos, player, mode )
    end
 end
 
+local function get_rot(node)
+   local rot = 0
+   if node.param2 >= 0 and node.param2 <= 31 then
+      rot = node.param2 - 0
+   elseif node.param2 >= 32 and node.param2 <= 63 then
+      rot = node.param2 - 32
+   elseif node.param2 >= 64 and node.param2 <= 95 then
+      rot = node.param2 - 64
+   elseif node.param2 >= 96 and node.param2 <= 127 then
+      rot = node.param2 - 96
+   elseif node.param2 >= 128 and node.param2 <= 159 then
+      rot = node.param2 - 128
+   elseif node.param2 >= 160 and node.param2 <= 191 then
+      rot = node.param2 - 160
+   elseif node.param2 >= 192 and node.param2 <= 223 then
+      rot = node.param2 - 192
+   elseif node.param2 >= 224 and node.param2 <= 255 then
+      rot = node.param2 - 224
+   end
+   return rot
+end
 
 travelnet.on_receive_fields = function(pos, formname, fields, player)
    if( not( pos )) then
       return;
    end
    local meta = minetest.get_meta(pos);
-
+   local owner = meta:get_string("owner");
    local name = player:get_player_name();
-
+   local node = minetest.get_node(pos);
+   if name == owner then
+      if fields.white then
+         local rot = get_rot(node)
+         node.param2 = 0 + rot
+         minetest.swap_node(pos,node)
+         return
+      elseif fields.red then
+         local rot = get_rot(node)
+         node.param2 = 32 + rot
+         minetest.swap_node(pos,node)
+         return
+      elseif fields.orange then
+         local rot = get_rot(node)
+         node.param2 = 64 + rot
+         minetest.swap_node(pos,node)
+         return
+      elseif fields.yellow then
+         local rot = get_rot(node)
+         node.param2 = 96 + rot
+         minetest.swap_node(pos,node)
+         return
+      elseif fields.green then
+         local rot = get_rot(node)
+         node.param2 = 128 + rot
+         minetest.swap_node(pos,node)
+         return
+      elseif fields.cyan then
+         local rot = get_rot(node)
+         node.param2 = 160 + rot
+         minetest.swap_node(pos,node)
+         return
+      elseif fields.blue then
+         local rot = get_rot(node)
+         node.param2 = 192 + rot
+         minetest.swap_node(pos,node)
+         return
+      elseif fields.violet then
+         local rot = get_rot(node)
+         node.param2 = 224 + rot
+         minetest.swap_node(pos,node)
+         return
+      end
+   end
    -- the player wants to quit/exit the formspec; do not save/update anything
    if( fields and fields.station_exit and fields.station_exit ~= "" ) then
       return;
@@ -678,7 +750,6 @@ travelnet.on_receive_fields = function(pos, formname, fields, player)
    -- show help text
    if( fields and fields.station_help_setup and fields.station_help_setup ~= "") then
       -- simulate right-click
-      local node = minetest.get_node( pos );
       if( node and node.name and minetest.registered_nodes[ node.name ] ) then
          travelnet.show_message( pos, name, "--> Help <--",
 -- TODO: actually add help page
@@ -689,8 +760,6 @@ travelnet.on_receive_fields = function(pos, formname, fields, player)
 
    -- the player wants to remove the station
    if( fields.station_dig ) then
-      local owner = meta:get_string( "owner" );
-
       local node = minetest.get_node(pos)
       local description = "station"
       if( node and node.name and node.name == "travelnet:travelnet") then
@@ -949,8 +1018,7 @@ end
 
 
 travelnet.can_dig = function( pos, player, description )
-   -- forbid digging of the travelnet
-   return false;
+   return true;
 end
 
 -- obsolete function

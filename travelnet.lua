@@ -13,7 +13,8 @@ minetest.register_node("travelnet:travelnet", {
 	mesh = "travelnet.obj",
 	sunlight_propagates = true,
 	paramtype = 'light',
-	paramtype2 = "facedir",
+	paramtype2 = "colorfacedir",
+	palette = "travelnet_palette.png",
 	wield_scale = {x=0.6, y=0.6, z=0.6},
 	selection_box = {
 		type = "fixed",
@@ -40,7 +41,7 @@ minetest.register_node("travelnet:travelnet", {
 	},
 
 	tiles = travelnet.tiles_travelnet,
-
+	overlay_tiles = travelnet.overlay_tiles_travelnet,
 	inventory_image = travelnet.travelnet_inventory_image,
 
 	groups = {}, --cracky=1,choppy=1,snappy=1},
