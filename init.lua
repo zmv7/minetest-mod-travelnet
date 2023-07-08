@@ -633,7 +633,7 @@ travelnet.open_close_door = function( pos, player, mode )
    end
 
    local door_node = minetest.get_node( pos2 );
-   if( door_node ~= nil and door_node.name ~= 'ignore' and door_node.name ~= 'air' and minetest.registered_nodes[ door_node.name ] ~= nil and minetest.registered_nodes[ door_node.name ].on_rightclick ~= nil) then
+   if( door_node ~= nil and door_node.name:match('door') and door_node.name ~= 'ignore' and door_node.name ~= 'air' and minetest.registered_nodes[ door_node.name ] ~= nil and minetest.registered_nodes[ door_node.name ].on_rightclick ~= nil) then
 
       -- at least for homedecor, same facedir would mean "door closed"
 
