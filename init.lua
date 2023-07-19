@@ -635,7 +635,7 @@ travelnet.open_close_door = function( pos, player, mode )
       return
    end
    local pos2 = {x=pos.x,y=pos.y,z=pos.z};
-
+   this_node.param2 = this_node.param2 - (32*math.floor(this_node.param2/32))
    if(     this_node.param2 == 0 ) then pos2 = {x=pos.x,y=pos.y,z=(pos.z-1)};
    elseif( this_node.param2 == 1 ) then pos2 = {x=(pos.x-1),y=pos.y,z=pos.z};
    elseif( this_node.param2 == 2 ) then pos2 = {x=pos.x,y=pos.y,z=(pos.z+1)};
