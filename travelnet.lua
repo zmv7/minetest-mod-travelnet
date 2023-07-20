@@ -5,6 +5,25 @@
 -- Author: Sokomine
 local S = travelnet.S;
 
+local tnet_box = {
+	type = "fixed",
+	fixed = {
+
+		{ 0.45, -0.5,-0.5,  0.5,  1.45, 0.5},
+		{-0.5 , -0.5, 0.45, 0.45, 1.45, 0.5},
+		{-0.5,  -0.5,-0.5 ,-0.45, 1.45, 0.5},
+
+		--groundplate to stand on
+		{ -0.5,-0.5,-0.5,0.5,-0.45, 0.5},
+		--roof
+		{ -0.5, 1.45,-0.5,0.5, 1.5, 0.5},
+
+		-- control panel
+		--                { -0.2, 0.6,  0.3, 0.2, 1.1,  0.5},
+
+	},
+}
+
 minetest.register_node("travelnet:travelnet", {
 
 	description = S("Travelnet-Box"),
@@ -16,29 +35,9 @@ minetest.register_node("travelnet:travelnet", {
 	paramtype2 = "colorfacedir",
 	palette = "travelnet_palette.png",
 	wield_scale = {x=0.6, y=0.6, z=0.6},
-	selection_box = {
-		type = "fixed",
-		fixed = { -0.5, -0.5, -0.5, 0.5, 1.5, 0.5 }
-	},
+	selection_box = tnet_box,
 
-	collision_box = {
-		type = "fixed",
-		fixed = {
-
-			{ 0.45, -0.5,-0.5,  0.5,  1.45, 0.5},
-			{-0.5 , -0.5, 0.45, 0.45, 1.45, 0.5}, 
-			{-0.5,  -0.5,-0.5 ,-0.45, 1.45, 0.5},
-
-			--groundplate to stand on
-			{ -0.5,-0.5,-0.5,0.5,-0.45, 0.5}, 
-			--roof
-			{ -0.5, 1.45,-0.5,0.5, 1.5, 0.5}, 
-
-			-- control panel
-			--                { -0.2, 0.6,  0.3, 0.2, 1.1,  0.5},
-
-		},
-	},
+	collision_box = tnet_box,
 
 	tiles = travelnet.tiles_travelnet,
 	overlay_tiles = travelnet.overlay_tiles_travelnet,

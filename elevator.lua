@@ -86,6 +86,21 @@ travelnet.show_nearest_elevator = function( pos, owner_name, param2 )
 	end
 end
 
+local elev_box = {
+	type = "fixed",
+	fixed = {
+
+		{ 0.45, -0.5,-0.5,  0.5,  1.45, 0.5},
+		{-0.5 , -0.5, 0.45, 0.45, 1.45, 0.5},
+		{-0.5,  -0.5,-0.5 ,-0.45, 1.45, 0.5},
+
+		--groundplate to stand on
+		{ -0.5,-0.5,-0.5,0.5,-0.45, 0.5},
+		--roof
+		{ -0.5, 1.45,-0.5,0.5, 1.5, 0.5},
+
+	},
+}
 
 minetest.register_node("travelnet:elevator", {
 	description = S("Elevator"),
@@ -96,25 +111,9 @@ minetest.register_node("travelnet:elevator", {
 	paramtype2 = "facedir",
 	wield_scale = {x=0.6, y=0.6, z=0.6},
 
-	selection_box = {
-		type = "fixed",
-		fixed = { -0.5, -0.5, -0.5, 0.5, 1.5, 0.5 }
-	},
+	selection_box = elev_box,
 
-	collision_box = {
-		type = "fixed",
-		fixed = {
-
-			{ 0.45, -0.5,-0.5,  0.5,  1.45, 0.5},
-			{-0.5 , -0.5, 0.45, 0.45, 1.45, 0.5},
-			{-0.5,  -0.5,-0.5 ,-0.45, 1.45, 0.5},
-
-			--groundplate to stand on
-			{ -0.5,-0.5,-0.5,0.5,-0.45, 0.5},
-			--roof
-			{ -0.5, 1.45,-0.5,0.5, 1.5, 0.5},
-		},
-	},
+	collision_box = elev_box,
 
 	tiles = travelnet.tiles_elevator,
 
