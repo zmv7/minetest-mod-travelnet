@@ -675,25 +675,7 @@ travelnet.open_close_door = function( pos, player, mode )
 end
 
 local function get_rot(node)
-   local rot = 0
-   if node.param2 >= 0 and node.param2 <= 31 then
-      rot = node.param2 - 0
-   elseif node.param2 >= 32 and node.param2 <= 63 then
-      rot = node.param2 - 32
-   elseif node.param2 >= 64 and node.param2 <= 95 then
-      rot = node.param2 - 64
-   elseif node.param2 >= 96 and node.param2 <= 127 then
-      rot = node.param2 - 96
-   elseif node.param2 >= 128 and node.param2 <= 159 then
-      rot = node.param2 - 128
-   elseif node.param2 >= 160 and node.param2 <= 191 then
-      rot = node.param2 - 160
-   elseif node.param2 >= 192 and node.param2 <= 223 then
-      rot = node.param2 - 192
-   elseif node.param2 >= 224 and node.param2 <= 255 then
-      rot = node.param2 - 224
-   end
-   return rot
+   return node.param2 - (32*math.floor(node.param2/32))
 end
 
 travelnet.on_receive_fields = function(pos, formname, fields, player)
