@@ -33,16 +33,16 @@ travelnet.tiles_travelnet = {
 		"travelnet_travelnet_front_color.png",  -- backward view
 		"travelnet_travelnet_back_color.png", -- front view
 		"travelnet_travelnet_side_color.png", -- sides :)
-		"default_steel_block.png",  -- view from top
-		"default_clay.png",  -- view from bottom
+		"travelnet_tin.png",  -- view from top
+		"travelnet_tin.png",  -- view from bottom
 		}
 
 travelnet.overlay_tiles_travelnet = {
 		{name = "travelnet_travelnet_front.png", color = "#ffffff"},  -- backward view
 		{name = "travelnet_travelnet_back.png", color = "#ffffff"}, -- front view
 		{name = "travelnet_travelnet_side.png", color = "#ffffff"}, -- sides :)
-		{name = "default_steel_block.png", color = "#ffffff"},  -- view from top
-		{name = "default_clay.png", color = "#ffffff"},  -- view from bottom
+		{name = "travelnet_tin.png", color = "#ffffff"},  -- view from top
+		{name = "travelnet_tin.png", color = "#ffffff"},  -- view from bottom
 		}
 travelnet.tiles_elevator = {
 		"travelnet_elevator_front.png",
@@ -50,7 +50,7 @@ travelnet.tiles_elevator = {
 		"travelnet_elevator_sides_outside.png",
 		"travelnet_elevator_inside_ceiling.png",
 		"travelnet_elevator_inside_floor.png",
-		"default_steel_block.png"
+		"travelnet_tin.png"
 		}
 travelnet.travelnet_inventory_image = "travelnet_inv.png"
 travelnet.elevator_inventory_image  = "travelnet_elevator_inv.png"
