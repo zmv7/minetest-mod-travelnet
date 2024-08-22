@@ -98,6 +98,7 @@ local S = minetest.get_translator("travelnet")
 travelnet.S = S
 
 local s = minetest.get_mod_storage()
+local F = minetest.formspec_escape
 
 minetest.register_privilege("travelnet_attach", { description = S("allows to attach travelnet boxes to travelnets of other players"), give_to_singleplayer = false});
 minetest.register_privilege("travelnet_remove", { description = S("allows to dig travelnet boxes which belog to nets of other players"), give_to_singleplayer = false});
@@ -189,8 +190,8 @@ travelnet.show_message = function( pos, player_name, title, message )
 		return;
 	end
 	local formspec = "size[8,3]"..
-		"label[3,0;"..minetest.formspec_escape( title or "Error").."]"..
-		"textlist[0,0.5;8,1.5;;"..minetest.formspec_escape( message or "- nothing -")..";]"..
+		"label[3,0;"..F( title or "Error").."]"..
+		"textlist[0,0.5;8,1.5;;"..F( message or "- nothing -")..";]"..
 		"button_exit[3.5,2.5;1.0,0.5;back;"..S("Back").."]"..
 		"button_exit[6.8,2.5;1.0,0.5;station_exit;"..S("Exit").."]"..
 		"field[20,20;0.1,0.1;pos2str;Pos;".. minetest.pos_to_string( pos ).."]";
@@ -254,11 +255,11 @@ travelnet.reset_formspec = function( meta )
 		"label[2.0,0.0;--> "..S("Configure this travelnet station").." <--]"..
 		"button_exit[8.0,0.0;2.2,0.7;station_dig;"..S("Remove station").."]"..
 		"field[0.3,1.2;9,0.9;station_name;"..S("Name of this station")..":;"..
-			minetest.formspec_escape(station_name or "").."]"..
+			F(station_name or "").."]"..
 		"label[0.3,1.5;"..S("How do you call this place here? Example: \"my first house\", \"mine\", \"shop\"...").."]"..
 
 		"field[0.3,2.8;9,0.9;station_network;"..S("Assign to Network:")..";"..
-			minetest.formspec_escape(station_network or "").."]"..
+			F(station_network or "").."]"..
 		"label[0.3,3.1;"..S("You can have more than one network. If unsure, use \"%s\""):format(tostring(station_network))..".]"..
 		"field[0.3,4.4;9,0.9;owner;"..S("Owned by:")..";]"..
 		"label[0.3,4.7;"..S("Unless you know what you are doing, leave this empty.").."]"..
@@ -348,9 +349,9 @@ travelnet.update_formspec = function( pos, puncher_name, fields )
    end
    local formspec = "size[12,"..trheight.."]"..
                             "label[6.3,0.0;"..S("Punch box to update target list.").."]"..
-                            "label[0.3,0.4;"..S("Name of this station:").."]".."label[6.3,0.4;"..minetest.formspec_escape(station_name or "?").."]"..
-                            "label[0.3,0.8;"..S("Assigned to Network:").."]" .."label[6.3,0.8;"..minetest.formspec_escape(station_network or "?").."]"..
-                            "label[0.3,1.2;"..S("Owned by:").."]"            .."label[6.3,1.2;"..minetest.formspec_escape(owner_name or "?").."]"..
+                            "label[0.3,0.4;"..S("Name of this station:").."]".."label[6.3,0.4;"..F(station_name or "?").."]"..
+                            "label[0.3,0.8;"..S("Assigned to Network:").."]" .."label[6.3,0.8;"..F(station_network or "?").."]"..
+                            "label[0.3,1.2;"..S("Owned by:").."]"            .."label[6.3,1.2;"..F(owner_name or "?").."]"..
                             "label[3.3,1.6;"..S("Click on target to travel there:").."]"..
 			    zusatzstr;
 --                            "button_exit[5.3,0.3;8,0.8;do_update;Punch box to update destination list. Click on target to travel there.]"..
@@ -472,12 +473,12 @@ travelnet.update_formspec = function( pos, puncher_name, fields )
 
          if( open_door_cmd ) then
             formspec = formspec .."button_exit["..(x)..","..(y+2.5)..";1,0.5;open_door;<>]"..
-                                  "label["..(x+0.9)..","..(y+2.35)..";"..tostring( k ).."]";
+                                  "label["..(x+0.9)..","..(y+2.35)..";"..F( k ).."]";
          elseif( is_elevator ) then
-            formspec = formspec .."button_exit["..(x)..","..(y+2.5)..";1,0.5;target;"..tostring( travelnet.targets[ owner_name ][ station_network ][ k ].nr ).."]"..
-                                  "label["..(x+0.9)..","..(y+2.35)..";"..tostring( k ).."]";
+            formspec = formspec .."button_exit["..(x)..","..(y+2.5)..";1,0.5;target;"..F( travelnet.targets[ owner_name ][ station_network ][ k ].nr ).."]"..
+                                  "label["..(x+0.9)..","..(y+2.35)..";"..F( k ).."]";
          else
-            formspec = formspec .."button_exit["..(x)..","..(y+2.5)..";4,0.5;target;"..k.."]";
+            formspec = formspec .."button_exit["..(x)..","..(y+2.5)..";4,0.5;target;"..F(k).."]";
          end
 
 --         if( is_elevator ) then
@@ -614,8 +615,8 @@ travelnet.add_target = function( station_name, network_name, pos, player_name, m
 
       meta:set_string("formspec",
                      "size[12,10]"..
-                     "field[0.3,0.6;6,0.7;station_name;"..S("Station:")..";"..   minetest.formspec_escape(meta:get_string("station_name")).."]"..
-                     "field[0.3,3.6;6,0.7;station_network;"..S("Network:")..";"..minetest.formspec_escape(meta:get_string("station_network")).."]" );
+                     "field[0.3,0.6;6,0.7;station_name;"..S("Station:")..";"..   F(meta:get_string("station_name")).."]"..
+                     "field[0.3,3.6;6,0.7;station_network;"..S("Network:")..";"..F(meta:get_string("station_network")).."]" );
 
       -- display a list of all stations that can be reached from here
       travelnet.update_formspec( pos, player_name, nil );
