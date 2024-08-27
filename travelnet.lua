@@ -41,6 +41,7 @@ minetest.register_node("travelnet:travelnet", {
 
 	tiles = travelnet.tiles_travelnet,
 	overlay_tiles = travelnet.overlay_tiles_travelnet,
+	use_texture_alpha = "blend",
 	inventory_image = travelnet.travelnet_inventory_image,
 
 	groups = {}, --cracky=1,choppy=1,snappy=1},

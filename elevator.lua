@@ -116,6 +116,7 @@ minetest.register_node("travelnet:elevator", {
 	collision_box = elev_box,
 
 	tiles = travelnet.tiles_elevator,
+	use_texture_alpha = "blend",
 
 	inventory_image = travelnet.elevator_inventory_image,
 	groups = {}, --cracky=1,choppy=1,snappy=1,
